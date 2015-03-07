@@ -1,48 +1,16 @@
-var application_root = __dirname,
-    express = require("express"),
-    path = require("path"),
-    mongoose = require("mongoose"),
-    bodyParser = require('body-parser'),
-    multer = require('multer'); 
+var mongoose = require("mongoose"),
+    express = require("express");
+
+var Picture = mongoose.model("Picture");
 
 var app = express();
-app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(multer()); // for parsing multipart/form-data
-
-
-// database
-
-mongoose.connect('mongodb://localhost/pictures_database');
-
-var Schema = mongoose.Schema; //Schema.ObjectId
-
-var Picture = new Schema({
-    kind: { 
-        type: String, 
-        enum: ['thumbnail', 'full'],
-        required: true
-    },
-    url: { type: String, required: true },
-    title: String,
-    caption: String
-});
-
-// REST api
-
-app.get('/api', function (req, res) {
-  res.send('API is running');
-});
-
-var PictureModel = mongoose.model('Picture', Picture);
 
 // POST to CREATE
-app.post('/api/pictures', function (req, res) {
+exports.create = function (req, res) {
   var picture;
   console.log("POST: ");
   console.log(req);
-  picture = new PictureModel({
+  picture = new Picture({
     kind: req.body.kind,
     url: req.body.url,
     title: req.body.title,
@@ -56,11 +24,11 @@ app.post('/api/pictures', function (req, res) {
     }
   });
   return res.send(picture);
-});
+}
 
 // PUT to UPDATE
 // Bulk update
-app.put('/api/pictures', function (req, res) {
+exports.update_batch = function (req, res) {
     var i, len = 0;
     console.log("is Array req.body.picture");
     console.log(Array.isArray(req.body.picture));
@@ -74,7 +42,7 @@ app.put('/api/pictures', function (req, res) {
         for (var id in req.body.picture[i]) {
             console.log(id);
         }
-        PictureModel.update({ "_id": id }, req.body.picture[i][id], function (err, numAffected) {
+        Picture.update({ "_id": id }, req.body.picture[i][id], function (err, numAffected) {
             if (err) {
                 console.log("Error on update");
                 console.log(err);
@@ -84,11 +52,11 @@ app.put('/api/pictures', function (req, res) {
         });
     }
     return res.send(req.body.picture);
-});
+}
 
 // Single update
-app.put('/api/pictures/:id', function (req, res) {
-  return PictureModel.findById(req.params.id, function (err, picture) {
+exports.update = function (req, res) {
+  return Picture.findById(req.params.id, function (err, picture) {
     picture.kind = req.body.kind;
     picture.url = req.body.url;
     picture.title = req.body.title;
@@ -102,37 +70,37 @@ app.put('/api/pictures/:id', function (req, res) {
       return res.send(picture);
     });
   });
-});
+}
 
 // GET to READ
 
 // List picture
-app.get('/api/pictures', function (req, res) {
-  return PictureModel.find(function (err, pictures) {
+exports.pictures_list = function (req, res) {
+  return Picture.find(function (err, pictures) {
     if (!err) {
       return res.send(pictures);
     } else {
       return console.log(err);
     }
   });
-});
+}
 
 // Single picture
-app.get('/api/pictures/:id', function (req, res) {
-  return PictureModel.findById(req.params.id, function (err, picture) {
+exports.view = function (req, res) {
+  return Picture.findById(req.params.id, function (err, picture) {
     if (!err) {
       return res.send(picture);
     } else {
       return console.log(err);
     }
   });
-});
+}
 
 // DELETE to DESTROY
 
 // Bulk destroy all pictures
-app.delete('/api/pictures', function (req, res) {
-  PictureModel.remove(function (err) {
+exports.delete_batch = function (req, res) {
+  Picture.remove(function (err) {
     if (!err) {
       console.log("removed");
       return res.send('');
@@ -140,11 +108,11 @@ app.delete('/api/pictures', function (req, res) {
       console.log(err);
     }
   });
-});
+}
 
 // remove a single picture
-app.delete('/api/pictures/:id', function (req, res) {
-  return PictureModel.findById(req.params.id, function (err, picture) {
+exports.delete = function (req, res) {
+  return Picture.findById(req.params.id, function (err, picture) {
     return picture.remove(function (err) {
       if (!err) {
         console.log("removed");
@@ -154,8 +122,4 @@ app.delete('/api/pictures/:id', function (req, res) {
       }
     });
   });
-});
-
-// launch server
-
-app.listen(5000);
+}
