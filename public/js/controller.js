@@ -1,12 +1,12 @@
-var picturesAppController = angular.module('picturesAppController', []);
+var picturesAppControllers = angular.module('picturesAppControllers', []);
 
-picturesAppController.controller('PictureListController', function ($scope, $http) {
+picturesAppControllers.controller('PictureListController', function ($scope, $http) {
   $http.get('/api/pictures').success(function(data) {
     $scope.pictures = data;
   });
 });
 
-picturesAppController.controller('PictureController', ['$scope', '$routeParams', '$http',
+picturesAppControllers.controller('PictureController', ['$scope', '$routeParams', '$http',
   function($scope, $routeParams, $http) {
     $http.get('/api/pictures/' + $routeParams.pictureId).success(function(data) {
       $scope.picture = data;
@@ -14,7 +14,7 @@ picturesAppController.controller('PictureController', ['$scope', '$routeParams',
   }
 ]);
 
-picturesAppController.controller('UploadController', function($timeout, $scope, $http){
+picturesAppControllers.controller('UploadController', function($timeout, $scope, $http){
   $scope.uploadImage = function($event){
     //$event.stopPropagation();
     $timeout(function(){

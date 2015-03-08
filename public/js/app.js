@@ -1,6 +1,6 @@
 var picturesApp = angular.module('picturesApp', [
   'ngRoute',
-  'picturesAppController'
+  'picturesAppControllers'
 ]);
 
 picturesApp.config(['$routeProvider',

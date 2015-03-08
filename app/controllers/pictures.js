@@ -9,10 +9,10 @@ var app = express();
 exports.create = function (req, res) {
   var picture;
   console.log("POST: ");
-  console.log(req);
+  console.log(req.files);
   picture = new Picture({
-    kind: req.body.kind,
-    url: req.body.url,
+    kind: req.body.kind || "full",
+    src: req.files.file.name,
     title: req.body.title,
     caption: req.body.caption
   });

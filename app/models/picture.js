@@ -7,7 +7,7 @@ var PictureSchema = new Schema({
         enum: ['thumbnail', 'full'],
         required: true
     },
-    url: { type: String, required: true },
+    src: { type: String, required: true },
     title: String,
     caption: String
 });

@@ -10,10 +10,13 @@ var app = express();
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(multer()); // for parsing multipart/form-data
+app.use(multer({ dest: __dirname + '/public/uploads'})); // for parsing multipart/form-data
 
-//mongoose.connect('mongodb://localhost/pictures_database');
-mongoose.connect('mongodb://IhcAroVjevST:CFbeoTGXeZXy@mongosoup-cont002.mongosoup.de:32211/cc_IhcAroVjevST');
+//dev
+mongoose.connect('mongodb://localhost/pictures_database');
+
+//production
+//mongoose.connect('mongodb://IhcAroVjevST:CFbeoTGXeZXy@mongosoup-cont002.mongosoup.de:32211/cc_IhcAroVjevST');
 
 // routes
 require('./config/routes')(app)

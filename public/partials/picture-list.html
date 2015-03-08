@@ -2,14 +2,14 @@
   <h1>Pictures</h1>
   <h3><a href="#upload">Upload an image</a></h3>
   <p>Search: <input ng-model="query"></p>
-  <p>Total pictures: 13</p>
+  <p>Total pictures: {{ pictures.length }}</p>
   <h3>{{ query ? "Filtered by: " + query : "" }}</h3>
   <h3>{{ query ? "Number of results: " + filtered.length : "" }}</h3>
   <ul class="pictures">
     <article>
       <li ng-repeat="picture in filtered = (pictures | filter:query | orderBy:orderProp)">
-        <a href="#/pictures/{{ picture._id }}"><img ng-src="img/{{ picture.src }}"></a>
-        <span><p>{{ picture.caption }}</p></span>
+        <a href="#/pictures/{{ picture._id }}"><img ng-src="uploads/{{ picture.src }}"></a>
+        <a href="#/pictures/{{ picture._id }}"><span><p>{{ picture.caption }}</p></span></a>
       </li>
     </article>
   </ul>
