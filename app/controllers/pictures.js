@@ -9,21 +9,31 @@ var app = express();
 exports.create = function (req, res) {
   var picture;
   console.log("POST: ");
-  console.log(req.files);
+  console.log(req);
   picture = new Picture({
     kind: req.body.kind || "full",
     src: req.files.file.name,
+    //src: '',
     title: req.body.title,
     caption: req.body.caption
   });
-  picture.save(function (err) {
+  picture.save(function(err, picture) {
     if (!err) {
-      return console.log("created");
+      res.status(201);
+      res.json({
+        type: true,
+        data: picture
+      });
     } else {
-      return console.log(err);
+      console.log("this is an error");
+      res.status(500);
+      res.json({
+        type: false,
+        data: "Error occured: " + err
+      });
     }
   });
-  return res.send(picture);
+  //return res.send(picture);
 }
 
 // PUT to UPDATE
@@ -64,9 +74,18 @@ exports.update = function (req, res) {
     return picture.save(function (err) {
       if (!err) {
         console.log("updated");
+        res.status(204);
+        res.json({
+          type: true,
+          data: picture
+        });
       } else {
-        console.log(err);
-        return res.send(err);
+        console.log("this is an error");
+        res.status(500);
+        res.json({
+          type: false,
+          data: "Error occured: " + err
+        });
       }
       return res.send(picture);
     });
@@ -79,9 +98,18 @@ exports.update = function (req, res) {
 exports.pictures_list = function (req, res) {
   return Picture.find(function (err, pictures) {
     if (!err) {
-      return res.send(pictures);
+      res.status(200);
+      res.json({
+        type: true,
+        data: pictures
+      });
     } else {
-      return console.log(err);
+      console.log("this is an error");
+      res.status(500);
+      res.json({
+        type: false,
+        data: "Error occured: " + err
+      });
     }
   });
 }
@@ -90,9 +118,18 @@ exports.pictures_list = function (req, res) {
 exports.view = function (req, res) {
   return Picture.findById(req.params.id, function (err, picture) {
     if (!err) {
-      return res.send(picture);
+      res.status(200);
+      res.json({
+        type: true,
+        data: picture
+      });
     } else {
-      return console.log(err);
+      console.log("this is an error");
+      res.status(500);
+      res.json({
+        type: false,
+        data: "Error occured: " + err
+      });
     }
   });
 }
@@ -103,10 +140,17 @@ exports.view = function (req, res) {
 exports.delete_batch = function (req, res) {
   Picture.remove(function (err) {
     if (!err) {
-      console.log("removed");
-      return res.send('');
+      res.status(204);
+      res.json({
+        type: true,
+        data: ''
+      });
     } else {
-      console.log(err);
+      console.log("this is an error");
+      res.status(500);
+      res.json({
+        type: false,
+        data: "Error occured: " + err
     }
   });
 }
@@ -116,10 +160,18 @@ exports.delete = function (req, res) {
   return Picture.findById(req.params.id, function (err, picture) {
     return picture.remove(function (err) {
       if (!err) {
-        console.log("removed");
-        return res.send('');
+        res.status(204);
+        res.json({
+          type: true,
+          data: ''
+        });
       } else {
-        console.log(err);
+        console.log("this is an error");
+        res.status(500);
+        res.json({
+          type: false,
+          data: "Error occured: " + err
+        });
       }
     });
   });
