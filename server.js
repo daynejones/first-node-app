@@ -12,7 +12,8 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(multer()); // for parsing multipart/form-data
 
-mongoose.connect('mongodb://localhost/pictures_database');
+//mongoose.connect('mongodb://localhost/pictures_database');
+mongoose.connect('mongodb://IhcAroVjevST:CFbeoTGXeZXy@mongosoup-cont002.mongosoup.de:32211/cc_IhcAroVjevST');
 
 // routes
 require('./config/routes')(app)

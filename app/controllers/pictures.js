@@ -66,7 +66,7 @@ exports.update = function (req, res) {
         console.log("updated");
       } else {
         console.log(err);
-        return res.send({"error": err});
+        return res.send(err);
       }
       return res.send(picture);
     });
