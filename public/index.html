@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="picturesApp">
   <head>
     <meta charset="utf-8">
-    <title>API index</title>
+    <title>My Pictures</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css">
+    <script src="components/angular/angular.js"></script>
+    <script src="components/angular-route/angular-route.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/controller.js"></script>
+    <!--<script src="components/react/react.js"></script>-->
   </head>
   <body>
-    <section>
-      <h1>Nouns...</h1>
-      <p>
-        /pictures<br>
-        /pictures/:id
-      </p>
-    </section>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <main>
+      <div ng-view></div>
+    </main>
   </body>
 </html>
