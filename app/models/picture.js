@@ -9,7 +9,15 @@ var PictureSchema = new Schema({
     },
     src: { type: String, required: true },
     title: String,
-    caption: String
+    caption: String,
+    date: { type: Date, default: Date.now },
+    comments: [CommentSchema]
+});
+
+var CommentSchema = new Schema({
+    name: {type: String, default: "anonymous"},
+    body: String,
+    date: { type: Date, default: Date.now }
 });
 
 mongoose.model('Picture', PictureSchema);
