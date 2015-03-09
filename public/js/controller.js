@@ -13,7 +13,7 @@ picturesAppControllers.controller('PictureListController', function ($scope, $ht
     $timeout(function() {
       getPictures();
       poll();
-    }, 5000);
+    }, 1000);
   };
   poll();
   $scope.orderProp = '-date';
@@ -22,9 +22,11 @@ picturesAppControllers.controller('PictureListController', function ($scope, $ht
     var commentBody = target.value;
     target.value = "";
     var pictureScope = angular.element(target).parent(".comments").scope();
-    // optimistic update
-    pictureScope.picture.comments.push({"body": commentBody, "name": "anonymous"});
     var pictureId = pictureScope.picture._id;
+
+    // optimistic update...
+    pictureScope.picture.comments.push({"body": commentBody, "name": "anonymous"});
+
     $http.get('/api/pictures/' + pictureId).success(function(data) {
       var picture = data.data;
       picture.comments.push({"body": commentBody, "name": "anonymous"});
