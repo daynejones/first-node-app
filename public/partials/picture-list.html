@@ -1,7 +1,7 @@
 <section>
-  <h1>Pictures</h1>
-  <h3><a href="#upload">Upload an image</a></h3>
-  <p>Search: <input ng-model="query"></p>
+  <h1>Pictures App!</h1>
+  <h3><button type="button" ng-click="showUpload()">Upload an image</button></h3>
+  <p>Filter: <input ng-model="query"></p>
   <p>Total pictures: {{ pictures.length || 0 }}</p>
   <h3>{{ query ? "Filtered by: " + query : "" }}</h3>
   <h3>{{ query ? "Number of results: " + filtered.length : "" }}</h3>
@@ -22,4 +22,7 @@
       </li>
     </article>
   </ul>
+  <aside>
+    <div id="lightbox" class="lightbox"></div>
+  </aside>
 </section>

@@ -93,3 +93,16 @@ button {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
 }
+
+.lightbox {
+  display: none;
+  background-color: #fff;
+  position: absolute;
+  left: 50%;
+  width: 200px;
+  margin-left: -100px;
+  top: 20%;
+  padding: 20px;
+  border: 1px solid #777;
+  text-align: center;
+}

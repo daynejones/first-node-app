@@ -1,9 +1,11 @@
 var picturesAppControllers = angular.module('picturesAppControllers', []);
 
-picturesAppControllers.controller('PictureListController', function ($scope, $http, $timeout) {
+picturesAppControllers.controller('PictureListController', function ($scope, $http, $timeout, $compile) {
+  var fetchUpdates = true;
+
   var getPictures = function(){
     $http.get('/api/pictures').success(function(data) {
-      if (!angular.equals($scope.pictures, data.data)){
+      if (fetchUpdates && !angular.equals($scope.pictures, data.data)){
         $scope.pictures = data.data;
       }
     });
@@ -13,7 +15,7 @@ picturesAppControllers.controller('PictureListController', function ($scope, $ht
     $timeout(function() {
       getPictures();
       poll();
-    }, 1000);
+    }, 10000);
   };
   poll();
   $scope.orderProp = '-date';
@@ -31,31 +33,23 @@ picturesAppControllers.controller('PictureListController', function ($scope, $ht
       var picture = data.data;
       picture.comments.push({"body": commentBody, "name": "anonymous"});
       var data = picture;
+      // pause updates
+      fetchUpdates = false;
       $http.put('/api/pictures/' + pictureId, data).success(function(data) {
         $scope.picture = data.data;
+        fetchUpdates = true;
       });
     });
   }
-});
 
-picturesAppControllers.controller('PictureController', ['$scope', '$routeParams', '$http',
-  function($scope, $routeParams, $http) {
-    $http.get('/api/pictures/' + $routeParams.pictureId).success(function(data) {
-      $scope.picture = data.data;
-    });
-  }
-]);
-
-picturesAppControllers.controller('UploadController', function($timeout, $scope, $http){
   $scope.uploadImage = function($event){
-    //$event.stopPropagation();
     $timeout(function(){
       var element = angular.element(document.getElementById('file'));
       element.triggerHandler('click');
-      console.log(element);
     }, 0);
   }
   $scope.uploadFile = function(files) {
+      $scope.hideLightbox();
       var fd = new FormData();
       //Take the first selected file
       fd.append("file", files[0]);
@@ -70,4 +64,43 @@ picturesAppControllers.controller('UploadController', function($timeout, $scope,
         console.log("failure to upload");
       });
   };
+
+  $scope.showUpload = function($event){
+    var popupTemplate = document.createElement("div");
+    popupTemplate.setAttribute("ng-include", "'partials/upload.html'");
+
+    // We give the popup a new scope, inherited from the current one.
+    var popupScope = $scope.$new();
+    popupScope.someValue = Math.random();
+    var popupElement = $compile(popupTemplate)(popupScope);
+    $scope.showLightbox(popupElement);
+
+    popupScope.$on("finished", function () {
+      $scope.hideLightbox();
+      // Avoid leaks and nasty stuff. Destroying the scope when
+      // the popup is hidden is absolutely vital.
+      popupScope.$destroy();
+    });
+  }
+
+  $scope.showLightbox = function(content){
+    var lightbox = angular.element(document.getElementById("lightbox"));
+    lightbox.append(content);
+    lightbox[0].style.display = "block";
+  }
+
+  $scope.hideLightbox = function(){
+    var lightbox = document.getElementById("lightbox");
+    lightbox.style.display = "none";
+    lightbox.innerHTML = "";
+  }
+
 });
+
+picturesAppControllers.controller('PictureController', ['$scope', '$routeParams', '$http',
+  function($scope, $routeParams, $http) {
+    $http.get('/api/pictures/' + $routeParams.pictureId).success(function(data) {
+      $scope.picture = data.data;
+    });
+  }
+]);

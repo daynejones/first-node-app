@@ -1,9 +1,17 @@
 <h3><a href="#/">Back</a></h3>
 <ul class="pictures">
   <article>
-    <li>
+    <li ng-show="picture">
       <img ng-src="uploads/{{ picture.src }}">
-      <!--<span><p>{{ picture.caption }}</p></span>-->
+      <div class="comments">
+        <ul>
+          <li ng-repeat="comment in picture.comments | orderBy:-date">
+            <strong>{{ comment.name }}: </strong>
+            {{ comment.body }}
+          </li>
+        </ul>
+        <input placeholder="Write a comment..."  ng-keyup="$event.keyCode == 13 && submitComment($event)" ng-model="comment">
+      </div>
     </li>
   </article>
 </ul>

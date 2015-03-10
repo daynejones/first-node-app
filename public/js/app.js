@@ -22,10 +22,12 @@ function($routeProvider) {
       templateUrl: 'partials/picture.html',
       controller: 'PictureController'
     }).
+    /*
     when('/upload', {
       templateUrl: 'partials/upload.html',
       controller: 'UploadController'
     }).
+    */
     otherwise({
       redirectTo: '/'
     });

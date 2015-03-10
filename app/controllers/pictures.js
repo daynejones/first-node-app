@@ -12,9 +12,9 @@ exports.create = function (req, res) {
   console.log(req);
   picture = new Picture({
     kind: req.body.kind || "full",
-          src: req.files.file.name,
-          title: req.body.title,
-          caption: req.body.caption
+    src: req.files.file.name,
+    title: req.body.title,
+    caption: req.body.caption
   });
   picture.save(function(err, picture) {
     if (!err) {
@@ -66,7 +66,17 @@ exports.update_batch = function (req, res) {
 // Single update
 exports.update = function (req, res) {
   return Picture.findById(req.params.id, function (err, picture) {
-    Picture.update({ "_id": req.params.id }, req.body, function (err, numAffected) {
+
+    picture.kind = req.body.kind || picture.kind;
+    console.log(req.body);
+    if (typeof(req.files.file) == undefined){
+      picture.src = req.files.file.name || picture.name;
+    }
+    picture.title = req.body.title || picture.title;
+    picture.caption = req.body.caption || picture.caption;
+    picture.comments = req.body.comments || picture.comments;
+
+    picture.save(function(err){
       if (!err) {
         console.log("updated");
         res.status(204);
