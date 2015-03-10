@@ -15,7 +15,7 @@ picturesAppControllers.controller('PictureListController', function ($scope, $ht
     $timeout(function() {
       getPictures();
       poll();
-    }, 10000);
+    }, 1000);
   };
   poll();
   $scope.orderProp = '-date';
