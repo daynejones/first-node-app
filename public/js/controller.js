@@ -1,11 +1,11 @@
 var picturesAppControllers = angular.module('picturesAppControllers', []);
 
 picturesAppControllers.controller('PictureListController', function ($scope, $http, $timeout, $compile) {
-  var fetchUpdates = true;
+  var refreshUpdates = true;
 
   var getPictures = function(){
     $http.get('/api/pictures').success(function(data) {
-      if (fetchUpdates && !angular.equals($scope.pictures, data.data)){
+      if (refreshUpdates && !angular.equals($scope.pictures, data.data)){
         $scope.pictures = data.data;
       }
     });
@@ -28,18 +28,20 @@ picturesAppControllers.controller('PictureListController', function ($scope, $ht
 
     // optimistic update...
     pictureScope.picture.comments.push({"body": commentBody, "name": "anonymous"});
+    // pause updates
+    refreshUpdates = false;
 
-    $http.get('/api/pictures/' + pictureId).success(function(data) {
-      var picture = data.data;
-      picture.comments.push({"body": commentBody, "name": "anonymous"});
-      var data = picture;
-      // pause updates
-      fetchUpdates = false;
-      $http.put('/api/pictures/' + pictureId, data).success(function(data) {
-        $scope.picture = data.data;
-        fetchUpdates = true;
+    setTimeout(function(){
+      $http.get('/api/pictures/' + pictureId).success(function(data) {
+        var picture = data.data;
+        picture.comments.push({"body": commentBody, "name": "anonymous"});
+        var data = picture;
+        $http.put('/api/pictures/' + pictureId, data).success(function(data) {
+          $scope.picture = data.data;
+          refreshUpdates = true;
+        });
       });
-    });
+    }, 5000);
   }
 
   $scope.uploadImage = function($event){
