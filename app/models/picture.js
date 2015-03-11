@@ -17,7 +17,8 @@ var PictureSchema = new Schema({
 var CommentSchema = new Schema({
     name: {type: String, default: "anonymous"},
     body: String,
-    date: { type: Date, default: Date.now }
+    date: { type: Date, default: Date.now, required: true }
 });
 
 mongoose.model('Picture', PictureSchema);
+mongoose.model('Comment', CommentSchema);

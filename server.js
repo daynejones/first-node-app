@@ -13,10 +13,10 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 app.use(multer({ dest: __dirname + '/public/uploads'})); // for parsing multipart/form-data
 
 //dev
-//mongoose.connect('mongodb://localhost/pictures_database');
+mongoose.connect('mongodb://localhost/pictures_database');
 
 //production
-mongoose.connect('mongodb://IhcAroVjevST:CFbeoTGXeZXy@mongosoup-cont002.mongosoup.de:32211/cc_IhcAroVjevST');
+//mongoose.connect('mongodb://IhcAroVjevST:CFbeoTGXeZXy@mongosoup-cont002.mongosoup.de:32211/cc_IhcAroVjevST');
 
 // routes
 require('./config/routes')(app)

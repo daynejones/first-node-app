@@ -2,6 +2,7 @@ var mongoose = require("mongoose"),
     express = require("express");
 
 var Picture = mongoose.model("Picture");
+var Comment = mongoose.model("Comment");
 
 var app = express();
 
@@ -65,33 +66,50 @@ exports.update_batch = function (req, res) {
 
 // Single update
 exports.update = function (req, res) {
-  return Picture.findById(req.params.id, function (err, picture) {
+  return Picture.findOne({_id: req.params.id}, function (err, picture) {
 
     picture.kind = req.body.kind || picture.kind;
-    console.log(req.body);
     if (typeof(req.files.file) == undefined){
       picture.src = req.files.file.name || picture.name;
     }
     picture.title = req.body.title || picture.title;
     picture.caption = req.body.caption || picture.caption;
-    picture.comments = req.body.comments || picture.comments;
 
-    picture.save(function(err){
-      if (!err) {
-        console.log("updated");
-        res.status(204);
-        res.json({
-          data: picture
-        });
-      } else {
-        console.log("this is an error in the update method");
-        console.log(err);
-        res.status(500);
-        res.json({
-          data: "Error occured: " + err
-        });
-      }
+    var savePicture = function(err, picture){
+      picture.save(function(err){
+        if (!err) {
+          console.log("updated");
+          res.status(204);
+          res.json({
+            data: picture
+          });
+        } else {
+          console.log("this is an error in the update method");
+          console.log(err);
+          res.status(500);
+          res.json({
+            data: "Error occured: " + err
+          });
+        }
+      });
+    }
+
+    req.body.comments.forEach(function(comment, index){
+      var comment = new Comment({
+        name: comment.name,
+        body: comment.body
+      });
+      var counter = 0;
+      comment.save(function(err, comment){
+        picture.comments.push(comment);
+        if (++counter == req.body.comments.length) {
+          console.log("saving a picture!!!");
+          savePicture(null, picture);
+        }
+      });
     });
+    //picture.comments = comments;
+
   });
 }
 

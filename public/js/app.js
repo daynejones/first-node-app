@@ -6,14 +6,20 @@ var picturesApp = angular.module('picturesApp', [
 picturesApp.config(['$routeProvider',
 function($routeProvider) {
   $routeProvider.
+    when('/', {
+      templateUrl: 'partials/login.html',
+      controller: 'LoginController'
+    }).
     when('/pictures', {
       templateUrl: 'partials/picture-list.html',
       controller: 'PictureListController'
     }).
+    /*
     when('/', {
       templateUrl: 'partials/picture-list.html',
       controller: 'PictureListController'
     }).
+    */
     when('/phones', {
       templateUrl: 'partials/picture-list.html',
       controller: 'PictureListController'
@@ -22,12 +28,6 @@ function($routeProvider) {
       templateUrl: 'partials/picture.html',
       controller: 'PictureController'
     }).
-    /*
-    when('/upload', {
-      templateUrl: 'partials/upload.html',
-      controller: 'UploadController'
-    }).
-    */
     otherwise({
       redirectTo: '/'
     });
