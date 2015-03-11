@@ -2,7 +2,6 @@ var picturesAppControllers = angular.module('picturesAppControllers', []);
 
 picturesAppControllers.controller('LoginController', function($scope, $routeParams, $http, $window, $location){
   var user = angular.fromJson($window.sessionStorage.user);
-  console.log("user is " + user);
   if (user && user.name){
     $location.path("/pictures");
   } 
@@ -27,17 +26,16 @@ picturesAppControllers.controller('PictureListController', function ($scope, $ht
     $timeout(function() {
       getPictures();
       poll();
-    }, 1000);
+    }, 5000);
   };
   poll();
   $scope.orderProp = '-date';
 
   $scope.submitComment = function($event){
-    var target = $event.target;
-    var commentBody = target.value;
+    var commentBody = $scope.comment;
+    $scope.comment = "";
     var commentName = angular.fromJson($window.sessionStorage.user).name;
-    target.value = "";
-    var pictureScope = angular.element(target).parent(".comments").scope();
+    var pictureScope = angular.element($event.target).parent(".comments").scope();
     var pictureId = pictureScope.picture._id;
 
     // optimistic update...
@@ -45,17 +43,11 @@ picturesAppControllers.controller('PictureListController', function ($scope, $ht
     // pause updates
     refreshUpdates = false;
 
-    setTimeout(function(){
-      $http.get('/api/pictures/' + pictureId).success(function(data) {
-        var picture = data.data;
-        picture.comments.push({"body": commentBody, "name": commentName});
-        var data = picture;
-        $http.put('/api/pictures/' + pictureId, data).success(function(data) {
-          $scope.picture = data.data;
-          refreshUpdates = true;
-        });
-      });
-    }, 0);
+    var data = {"comments": [{"body": commentBody, "name": commentName}]};
+    $http.put('/api/pictures/' + pictureId, data).success(function(data) {
+      $scope.picture = data.data;
+      refreshUpdates = true;
+    });
   }
 
   $scope.uploadImage = function($event){

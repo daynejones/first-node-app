@@ -101,9 +101,10 @@ exports.update = function (req, res) {
       });
       var counter = 0;
       comment.save(function(err, comment){
+        console.log(picture.comments);
+        console.log(comment);
         picture.comments.push(comment);
         if (++counter == req.body.comments.length) {
-          console.log("saving a picture!!!");
           savePicture(null, picture);
         }
       });
