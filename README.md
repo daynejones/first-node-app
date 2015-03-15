@@ -1,3 +1,3 @@
 # Livestream Photos App
 
-A basic app built using Node, Express, Angular, bourbon, neat, and bitters.
+My first app using Mongo, Express, Angular, Node, bourbon, neat, and bitters.
