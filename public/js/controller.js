@@ -1,32 +1,53 @@
 var picturesAppControllers = angular.module('picturesAppControllers', []);
 
-picturesAppControllers.controller('LoginController', function($scope, $routeParams, $http, $window, $location){
-  var user = angular.fromJson($window.sessionStorage.user);
-  if (user && user.name){
+picturesAppControllers.controller('LoginController', function($scope, $routeParams, $route, $timeout, $http, $window, $location){
+  function redirectToPictures(){
     $location.path("/pictures");
-  } 
+  }
+  if ($window.sessionStorage.user){
+    var user = angular.fromJson($window.sessionStorage.user);
+    if (user && user.name){
+      redirectToPictures();
+    } 
+  }
   $scope.setName = function(){
-    var user = {name: $scope.name};
-    $window.sessionStorage.user = angular.toJson(user);
+    if (typeof($scope.name) != "undefined"){
+      var user = {name: $scope.name};
+      $window.sessionStorage.user = angular.toJson(user);
+      redirectToPictures();
+      $timeout(function () {
+        // 0 ms delay to reload the page.
+        $route.reload();
+      }, 0);
+    }
   }
 });
 
-picturesAppControllers.controller('PictureListController', function ($scope, $http, $timeout, $compile, $window) {
+picturesAppControllers.controller('PictureListController', function ($scope, $http, $timeout, $compile, $window, $location, $rootScope) {
   var refreshUpdates = true;
+  $scope.imagesLoaded = [];
+
+  if ($window.sessionStorage.user){
+    var user = angular.fromJson($window.sessionStorage.user);
+    if (user && user.name){
+      $scope.user = user;
+    } 
+  }
 
   var getPictures = function(){
     $http.get('/api/pictures').success(function(data) {
-      if (refreshUpdates && !angular.equals($scope.pictures, data.data)){
-        $scope.pictures = data.data;
+      if (refreshUpdates && !angular.equals($scope.pictures, data)){
+        $scope.pictures = data;
       }
     });
   }
+
   getPictures();
   var poll = function(){
     $timeout(function() {
       getPictures();
       poll();
-    }, 5000);
+    }, 2500);
   };
   poll();
   $scope.orderProp = '-date';
@@ -34,6 +55,7 @@ picturesAppControllers.controller('PictureListController', function ($scope, $ht
   $scope.submitComment = function($event){
     var commentBody = $scope.comment;
     $scope.comment = "";
+    $event.target.blur();
     var commentName = angular.fromJson($window.sessionStorage.user).name;
     var pictureScope = angular.element($event.target).parent(".comments").scope();
     var pictureId = pictureScope.picture._id;
@@ -57,7 +79,6 @@ picturesAppControllers.controller('PictureListController', function ($scope, $ht
     }, 0);
   }
   $scope.uploadFile = function(files) {
-      $scope.hideLightbox();
       var fd = new FormData();
       //Take the first selected file
       fd.append("file", files[0]);
@@ -103,7 +124,43 @@ picturesAppControllers.controller('PictureListController', function ($scope, $ht
     lightbox.innerHTML = "";
   }
 
-});
+  $scope.logout = function(){
+    delete $window.sessionStorage.user;
+    $location.path("/");
+  }
+
+  $scope.login = function(){
+    // functionality is same as logout
+    $scope.logout();
+  }
+
+  $scope.imageLoaded = function($event){
+    var img = $event.target;
+    var parentLiScope = angular.element(img).parent("a").parent("li").scope();
+    parentLiScope.fading = false;
+    // keeping track of all image URLs we've loaded so we don't reload them
+    $scope.imagesLoaded.push(img.attributes['ng-src'].value);
+  }
+})
+.directive('imageLoad', ['$parse', function ($parse) {
+  return {
+    restrict: 'A',
+    link: function (scope, elem, attrs) {
+      var fn = $parse(attrs.imageLoad);
+      var parentLiScope = angular.element(elem[0]).parent("a").parent("li").scope();
+      // only do the fading in animation for images we have not already loaded before
+      if (scope.imagesLoaded.indexOf(attrs.ngSrc) < 0){
+        parentLiScope.fading = true; 
+      }
+      elem.on('load', function (event) {
+        scope.$apply(function() {
+          parentLiScope.fading = false; 
+          fn(scope, { $event: event });
+        });
+      });
+    }
+  };
+}]);
 
 picturesAppControllers.controller('PictureController', ['$scope', '$routeParams', '$http',
   function($scope, $routeParams, $http) {

@@ -4,13 +4,17 @@ var application_root = __dirname,
     mongoose = require("mongoose"),
     config = require('./config/config'),
     bodyParser = require('body-parser'),
-    multer = require('multer');
+    multer = require('multer'),
+    favicon = require('serve-favicon');
 
 var app = express();
+
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(multer({ dest: __dirname + '/public/uploads'})); // for parsing multipart/form-data
+
+app.use(favicon(__dirname + '/public/favicon.ico'));
 
 //dev
 mongoose.connect('mongodb://localhost/pictures_database');

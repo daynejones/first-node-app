@@ -1,10 +1,6 @@
 var mongoose = require("mongoose"),
-    express = require("express");
-
-var Picture = mongoose.model("Picture");
-var Comment = mongoose.model("Comment");
-
-var app = express();
+    Picture = mongoose.model("Picture"),
+    Comment = mongoose.model("Comment");
 
 // POST to CREATE
 exports.create = function (req, res) {
@@ -12,6 +8,7 @@ exports.create = function (req, res) {
   console.log("POST: ");
   console.log(req);
   picture = new Picture({
+    // full is the only kind of picture at the moment
     kind: req.body.kind || "full",
     src: req.files.file.name,
     title: req.body.title,
@@ -33,7 +30,6 @@ exports.create = function (req, res) {
       });
     }
   });
-  //return res.send(picture);
 }
 
 // PUT to UPDATE
@@ -84,7 +80,7 @@ exports.update = function (req, res) {
             data: picture
           });
         } else {
-          console.log("this is an error in the update method");
+          console.log("picture could not be updated");
           console.log(err);
           res.status(500);
           res.json({
@@ -94,6 +90,7 @@ exports.update = function (req, res) {
       });
     }
 
+    // create the comments models
     req.body.comments.forEach(function(comment, index){
       var comment = new Comment({
         name: comment.name,
@@ -109,8 +106,6 @@ exports.update = function (req, res) {
         }
       });
     });
-    //picture.comments = comments;
-
   });
 }
 
@@ -121,11 +116,9 @@ exports.pictures_list = function (req, res) {
   return Picture.find(function (err, pictures) {
     if (!err) {
       res.status(200);
-      res.json({
-        data: pictures
-      });
+      res.json(pictures);
     } else {
-      console.log("this is an error");
+      console.log("Error in pictures_list");
       res.status(500);
       res.json({
         data: "Error occured: " + err
@@ -143,7 +136,7 @@ exports.view = function (req, res) {
         data: picture
       });
     } else {
-      console.log("this is an error");
+      console.log("Error in view");
       res.status(500);
       res.json({
         data: "Error occured: " + err

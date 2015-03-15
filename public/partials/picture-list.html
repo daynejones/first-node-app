@@ -1,23 +1,25 @@
 <section>
-  <h1>Pictures App!</h1>
-  <h3><button type="button" ng-click="showUpload()">Upload an image</button></h3>
-  <p>Filter: <input ng-model="query"></p>
-  <p>Total pictures: {{ pictures.length || 0 }}</p>
-  <h3>{{ query ? "Filtered by: " + query : "" }}</h3>
-  <h3>{{ query ? "Number of results: " + filtered.length : "" }}</h3>
+  <header>
+    <h1 class="title">Live Stream</h1>
+    <button ng-hide="!user" type="button" href="" ng-click="logout()">Log out</button>
+    <div class="clear"></div>
+  </header>
+  <button class="button" type="button" onclick="document.getElementById('file').click();">Upload an image</button>
+  <input id="file" class="file-input" type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)"/>
+  <h3 class="total">Total pictures: {{ pictures.length || 0 }}</h3>
   <ul class="pictures">
     <article>
-      <li ng-show="pictures" ng-repeat="picture in filtered = (pictures | filter:query | orderBy:orderProp)">
-        <a href="#/pictures/{{ picture._id }}"><img ng-src="uploads/{{ picture.src }}"></a>
-        <!--<a href="#/pictures/{{ picture._id }}"><span><p>{{ picture.caption }}</p></span></a>-->
+      <li class="default" ng-class="{fadeIn: !fading}" ng-show="pictures" ng-repeat="picture in pictures | orderBy: orderProp">
+        <a ng-href="/pictures/{{ ::picture._id }}"><img image-load="imageLoaded($event)" ng-src="uploads/{{ ::picture.src }}"></a>
         <div class="comments">
           <ul>
             <li ng-repeat="comment in picture.comments | orderBy:-date">
-              <strong>{{ comment.name }}: </strong>
-              {{ comment.body }}
+              <strong>{{ ::comment.name }}: </strong>
+              {{ ::comment.body }}
             </li>
           </ul>
-          <input placeholder="Write a comment..."  ng-keyup="$event.keyCode == 13 && submitComment($event)" ng-model="$parent.comment">
+          <input ng-hide="!user" type="text" placeholder="Write a comment..."  ng-keyup="$event.keyCode == 13 && submitComment($event)" ng-model="$parent.comment">
+          <button ng-hide="user" ng-click="login()" type="button">Sign in to comment</button>
         </div>
       </li>
     </article>

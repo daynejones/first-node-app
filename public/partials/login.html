@@ -1,2 +1,7 @@
-<a href="#/pictures">To Pictures</a>
-<input ng-model="name" ng-keyup="$event.keyCode == 13 && setName($event)" placeholder="Enter your name...">
+<section class="login">
+  <article>
+    <h1>Welcome</h1>
+    <input type="text" ng-model="name" ng-keyup="$event.keyCode == 13 && setName()" placeholder="What's your first name?">
+    <button type="button" class="large" ng-click="setName()">Sign In</button>
+  </article>
+</section>

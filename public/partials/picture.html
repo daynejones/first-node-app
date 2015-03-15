@@ -1,4 +1,4 @@
-<h3><a href="#/">Back</a></h3>
+<h3><a href="/pictures">Back</a></h3>
 <ul class="pictures">
   <article>
     <li ng-show="picture">
@@ -10,7 +10,6 @@
             {{ comment.body }}
           </li>
         </ul>
-        <input placeholder="Write a comment..."  ng-keyup="$event.keyCode == 13 && submitComment($event)" ng-model="comment">
       </div>
     </li>
   </article>

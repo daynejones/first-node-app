@@ -1,0 +1,105 @@
+@import "./base";
+
+ul.pictures {
+  padding: 0;
+  margin: 0 auto;
+  max-width: 800px;
+  /*
+  columns: 300px 3;
+  -moz-columns: 300px 3;
+  -webkit-columns: 300px 3;
+  */
+  & > article img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+  }
+  
+  & > article > li {
+    display: inline-block;
+    position: relative;
+    margin-bottom: 10px;
+    padding: 2.35765%;
+    background: #eee;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+  }
+  & li span {
+    position: absolute;
+    margin: 2.35765%;
+    top: 71%;
+    padding: 2.35765%;
+    opacity: .8;
+  }
+
+  & li span p {
+    margin: 0;
+    padding: 20px;
+    background-color: #fff;
+  }
+}
+
+
+.file-input {
+  display: none;
+}
+
+.comments {
+  padding-left: 10px;
+  border-left: 6px solid $action-color;
+  margin-top: 10px;
+  & li {
+    margin: 10px 0;
+  }
+  & input {
+    padding: 8px;
+    margin-bottom: 0;
+    width: 100%;
+    font-size: 12px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+  }
+}
+
+
+.lightbox {
+  display: none;
+  background-color: #fff;
+  position: absolute;
+  left: 50%;
+  width: 200px;
+  margin-left: -100px;
+  top: 20%;
+  padding: 20px;
+  border: 1px solid #777;
+  text-align: center;
+}
+
+.default {
+  opacity: 0;
+}
+
+.fadeIn {
+  -webkit-transition: opacity 2s; /* For Safari 3.1 to 6.0 */
+  transition: opacity 2s;
+  opacity: 1;
+}
+
+header {
+  & h1.title {
+    float: left;
+  }
+  & button {
+    float: right;
+  }
+}
+
+.total {
+  margin-top: .25em
+}

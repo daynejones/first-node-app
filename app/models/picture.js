@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
+// Picture Model
 var PictureSchema = new Schema({
     kind: { 
         type: String, 
@@ -14,6 +15,7 @@ var PictureSchema = new Schema({
     comments: [CommentSchema]
 });
 
+// Comment Model
 var CommentSchema = new Schema({
     name: {type: String, default: "anonymous"},
     body: String,
