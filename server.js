@@ -16,11 +16,14 @@ app.use(multer({ dest: __dirname + '/public/uploads'})); // for parsing multipar
 
 app.use(favicon(__dirname + '/public/favicon.ico'));
 
-//dev
-mongoose.connect('mongodb://localhost/pictures_database');
+if (process.env.NODE_ENV == "production"){
+  //production
+  mongoose.connect('mongodb://IhcAroVjevST:CFbeoTGXeZXy@mongosoup-cont002.mongosoup.de:32211/cc_IhcAroVjevST');
+} else {
+  //dev
+  mongoose.connect('mongodb://localhost/pictures_database');
+}
 
-//production
-//mongoose.connect('mongodb://IhcAroVjevST:CFbeoTGXeZXy@mongosoup-cont002.mongosoup.de:32211/cc_IhcAroVjevST');
 
 // routes
 require('./config/routes')(app)
