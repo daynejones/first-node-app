@@ -53,8 +53,8 @@ picturesAppControllers.controller('PictureListController', function ($scope, $ht
   $scope.orderProp = '-date';
 
   $scope.submitComment = function($event){
-    var commentBody = $scope.comment;
-    $scope.comment = "";
+    var commentBody = $event.target.value;
+    $event.target.value = "";
     $event.target.blur();
     var commentName = angular.fromJson($window.sessionStorage.user).name;
     var pictureScope = angular.element($event.target).parent(".comments").scope();

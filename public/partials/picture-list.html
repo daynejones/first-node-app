@@ -18,7 +18,7 @@
               {{ ::comment.body }}
             </li>
           </ul>
-          <input ng-hide="!user" type="text" placeholder="Write a comment..."  ng-keyup="$event.keyCode == 13 && submitComment($event)" ng-model="$parent.comment">
+          <input ng-hide="!user" type="text" placeholder="Write a comment..."  ng-keyup="$event.keyCode == 13 && submitComment($event)" ng-model="comment">
           <button ng-hide="user" ng-click="login()" type="button">Sign in to comment</button>
         </div>
       </li>
