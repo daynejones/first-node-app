@@ -2,6 +2,7 @@
   <header>
     <h1 class="title">Live Stream</h1>
     <button ng-hide="!user" type="button" href="" ng-click="logout()">Log out</button>
+    <button ng-hide="user" type="button" href="" ng-click="login()">Log in</button>
     <div class="clear"></div>
   </header>
   <button class="button" type="button" onclick="document.getElementById('file').click();">Upload an image</button>
@@ -10,7 +11,7 @@
   <ul class="pictures">
     <article>
       <li class="default" ng-class="{fadeIn: !fading}" ng-show="pictures" ng-repeat="picture in pictures | orderBy: orderProp">
-        <a ng-href="/pictures/{{ ::picture._id }}"><img image-load="imageLoaded($event)" ng-src="uploads/{{ ::picture.src }}"></a>
+        <a ng-href="/pictures/{{ ::picture._id }}"><img image-load="imageLoaded($event)" ng-src="{{ ::picture.src }}"></a>
         <div class="comments">
           <ul>
             <li ng-repeat="comment in picture.comments | orderBy:-date">

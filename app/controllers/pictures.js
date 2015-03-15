@@ -10,7 +10,7 @@ exports.create = function (req, res) {
   picture = new Picture({
     // full is the only kind of picture at the moment
     kind: req.body.kind || "full",
-    src: req.files.file.name,
+    src: "uploads/" + req.files.file.name,
     title: req.body.title,
     caption: req.body.caption
   });

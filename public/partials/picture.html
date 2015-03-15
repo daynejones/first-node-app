@@ -2,7 +2,7 @@
 <ul class="pictures">
   <article>
     <li ng-show="picture">
-      <img ng-src="uploads/{{ picture.src }}">
+      <img ng-src="{{ picture.src }}">
       <div class="comments">
         <ul>
           <li ng-repeat="comment in picture.comments | orderBy:-date">
